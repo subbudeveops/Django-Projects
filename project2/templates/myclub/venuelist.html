@@ -1,0 +1,22 @@
+{% extends 'myclub/basic.html' %}
+
+
+{%block content%}
+  
+  <h1>Venue List</h1>
+  <br/>
+  <table class="table">
+  {% for venue in venue_list%}
+  <tr>
+    
+  <td><a href="{% url 'show-venue' venue.id %}">{{venue}} </a></td>
+  <td align="right">
+   <a href="{% url 'update-venue' venue.id %}" class="btn btn-outline-secondary  btn-sm">update</a>
+
+  </td>
+
+  </tr>
+
+  {%endfor%}
+ </table>
+  {%endblock%}

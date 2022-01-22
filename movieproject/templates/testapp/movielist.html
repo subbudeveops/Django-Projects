@@ -1,0 +1,51 @@
+{% extends 'testapp/basic.html' %}
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7
+/css/bootstrap.min.css" integrity="sha384-
+BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" c
+rossorigin="anonymous"> 
+ <link rel="stylesheet" href="{% static "css/movie.css"%}"> 
+ <link href="https://fonts.googleapis.com/css?family=Merriweather"
+rel="stylesheet"> 
+
+</head>
+<body>
+{% include 'testapp/navbar.html' %}
+{%block content%}
+<div class="container">
+  
+<h1>Movies Information</h1> 
+ {% if movie_list %} 
+  <table border="2"> 
+    <thead> 
+    <th>Released Date</th> 
+    <th>Movie Name</th> 
+    <th>Hero</th> 
+    <th>Heroine</th> 
+    <th>Rating</th> 
+  </thead> 
+  {% for movie in movie_list%} 
+  <tr> 
+    <td>{{movie.rdate}}</td> 
+    <td>{{movie.moviename}}</td>
+    <td>{{movie.hero}}</td> 
+    <td>{{movie.heroin}}</td> 
+    <td>{{movie.rating}}</td> 
+ </tr> 
+  {% endfor %} 
+  </table> 
+ {% else %} 
+<p>No Movies Found</p> 
+ {%endif%} 
+ 
+ {%endblock%}
+</div>
+</body>
+</html>

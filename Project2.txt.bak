@@ -1,0 +1,118 @@
+creating Project2
+1.django-admin startproject project2
+
+2.cd project2
+
+
+3.python manage.py startapp myclub
+
+4.inside setting.py add the application and templates
+
+5.views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+import datetime
+import calendar
+from  calendar import Calendar, HTMLCalendar, month 
+from datetime import datetime
+from .models import Event
+from .forms import VenueForm
+
+# Create your views here.
+def add_venue(request):
+  form=VenueForm
+  return render(request,'myclub/add_venue.html',{'form':form})
+
+def Event_list(request):
+  all_list=Event.objects.all()
+  return render(request,'myclub/event_list.html',{'all_list':all_list})
+
+def Month_Year_view(request,year=datetime.now().year,month=datetime.now().strftime('%B')):
+  name='subbareddy' 
+  month=month.capitalize()
+  #convert month from month name to number
+  month_number=list(calendar.month_name).index(month)
+  cal=HTMLCalendar().formatmonth(year,month_number)
+  now=datetime.now()
+  current_year=now.year
+  time=now.strftime("%I:%M:%S %p")
+  return render(request,'myclub/home.html',{
+                          'name':name,
+                          'year':year,
+                          'month':month,
+                          'month_number':month_number,
+                          'cal':cal,
+                          'now':now,
+                          'current_year':current_year,
+                          'time':time
+                          })
+
+6. add urls.py create the myclub application
+
+ from django.contrib import admin
+from django.urls import path
+from myclub import views
+
+#from project2.myclub.views import template_view
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.Month_Year_view,name='home'),
+    path('<int:year>/<str:month>/', views.Month_Year_view,name='home'),
+    path('event', views.Event_list,name='event_list'),
+    path('add_venue', views.add_venue,name='add-venue'),
+]
+
+
+
+7.urls.py  inside of the project2 
+ 
+
+from django.contrib import admin
+from django.urls import path,include
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('myclub/', include('myclub.urls')),
+]
+
+8.models.py
+
+from datetime import datetime
+from django.db import models
+from django.db.models.deletion import CASCADE
+from django.contrib.auth.models import User
+
+# Create your models here.
+class Venue(models.Model):
+  name=models.CharField('Venue name',max_length=100)
+  address=models.CharField(max_length=100)
+  zip_code=models.CharField('Zip code',max_length=10)
+  phone=models.CharField('conatact number',max_length=14)
+  web=models.URLField('website address')
+  email_address=models.EmailField('Email address')
+  def __str__(self):
+    return self.name
+
+class MyClubUser(models.Model):
+  first_name=models.CharField(max_length=25)
+  last_name=models.CharField(max_length=25)
+  email=models.EmailField('User Email') 
+
+  def __str__(self):
+    return self.first_name
+
+
+class Event(models.Model):
+  name=models.CharField('Event name',max_length=200)
+  event_date=models.DateTimeField('Event Date')
+  venue=models.ForeignKey(Venue,blank=True,null=True,on_delete=models.CASCADE)
+  manager=models.ForeignKey(User,blank=True,null=True,on_delete=models.SET_NULL)
+  description=models.TextField(blank=True)
+  attends=models.ManyToManyField(MyClubUser,blank=True)
+
+  def __str__(self):
+    return self.name
+

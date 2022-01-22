@@ -1,0 +1,14 @@
+{% extends 'myclub/basic.html' %}
+
+
+{%block content%}
+  <center>
+  <h3>Hello !!!{{name}} Event for  {{month}} {{year}}</h3><br/>
+
+  {{time}}<br/>
+
+  <br/><h3>{{ cal|safe }}</h3><br/>
+  copy right(S){{current_year}}<br/>
+  {{now}}
+  </center>
+  {%endblock%}

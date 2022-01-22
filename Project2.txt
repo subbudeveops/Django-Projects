@@ -1,0 +1,342 @@
+creating Project2
+1.django-admin startproject project2
+
+2.cd project2
+
+
+3.python manage.py startapp myclub
+
+4.inside setting.py add the application and templates
+
+5.views.py
+
+from django.shortcuts import render
+from django.http import HttpResponse
+import datetime
+import calendar
+from  calendar import Calendar, HTMLCalendar, month 
+from datetime import datetime
+from .models import Event
+from .forms import VenueForm
+
+# Create your views here.
+def add_venue(request):
+  form=VenueForm
+  return render(request,'myclub/add_venue.html',{'form':form})
+
+def Event_list(request):
+  all_list=Event.objects.all()
+  return render(request,'myclub/event_list.html',{'all_list':all_list})
+
+def Month_Year_view(request,year=datetime.now().year,month=datetime.now().strftime('%B')):
+  name='subbareddy' 
+  month=month.capitalize()
+  #convert month from month name to number
+  month_number=list(calendar.month_name).index(month)
+  cal=HTMLCalendar().formatmonth(year,month_number)
+  now=datetime.now()
+  current_year=now.year
+  time=now.strftime("%I:%M:%S %p")
+  return render(request,'myclub/home.html',{
+                          'name':name,
+                          'year':year,
+                          'month':month,
+                          'month_number':month_number,
+                          'cal':cal,
+                          'now':now,
+                          'current_year':current_year,
+                          'time':time
+                          })
+
+6. add urls.py create the myclub application
+
+ from django.contrib import admin
+from django.urls import path
+from myclub import views
+
+#from project2.myclub.views import template_view
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', views.Month_Year_view,name='home'),
+    path('<int:year>/<str:month>/', views.Month_Year_view,name='home'),
+    path('event', views.Event_list,name='event_list'),
+    path('add_venue', views.add_venue,name='add-venue'),
+]
+
+
+
+7.urls.py  inside of the project2 
+ 
+
+from django.contrib import admin
+from django.urls import path,include
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('myclub/', include('myclub.urls')),
+]
+
+8.models.py
+
+from datetime import datetime
+from django.db import models
+from django.db.models.deletion import CASCADE
+from django.contrib.auth.models import User
+
+# Create your models here.
+class Venue(models.Model):
+  name=models.CharField('Venue name',max_length=100)
+  address=models.CharField(max_length=100)
+  zip_code=models.CharField('Zip code',max_length=10)
+  phone=models.CharField('conatact number',max_length=14)
+  web=models.URLField('website address')
+  email_address=models.EmailField('Email address')
+  def __str__(self):
+    return self.name
+
+class MyClubUser(models.Model):
+  first_name=models.CharField(max_length=25)
+  last_name=models.CharField(max_length=25)
+  email=models.EmailField('User Email') 
+
+  def __str__(self):
+    return self.first_name
+
+
+class Event(models.Model):
+  name=models.CharField('Event name',max_length=200)
+  event_date=models.DateTimeField('Event Date')
+  venue=models.ForeignKey(Venue,blank=True,null=True,on_delete=models.CASCADE)
+  manager=models.ForeignKey(User,blank=True,null=True,on_delete=models.SET_NULL)
+  description=models.TextField(blank=True)
+  attends=models.ManyToManyField(MyClubUser,blank=True)
+
+  def __str__(self):
+    return self.name
+
+
+8.python mange.py makemigrations
+
+9.python manage.py migrate
+
+10.python manage.py createsuperuser
+
+11. in side the admin.py register the application
+
+admin.py
+
+from django.contrib import admin
+from django.db.models import fields
+from .models import Event
+from .models import MyClubUser
+from .models import Venue
+
+ 
+# Register your models here.
+
+admin.site.register(MyClubUser)
+
+class VenueAAdmin(admin.ModelAdmin):
+  list_display=('name','address','phone')
+  ordering=('name',)
+  search_fields=('name','phone',)
+  
+admin.site.register(Venue,VenueAAdmin)
+
+
+class EventAdmin(admin.ModelAdmin):
+  fields=('name', 'venue','event_date','manager','description','attends',)
+  list_display=('name','venue','event_date','manager')
+  list_filter=('event_date','venue')
+  ordering=('-event_date',)
+admin.site.register(Event,EventAdmin)
+
+
+12. after then create the forms
+inside application create the froms
+forms.py
+
+
+from django import forms
+
+from .models import Venue
+
+#create Forms
+class VenueForm(forms.ModelForm):
+  class Meta:
+    model=Venue
+    #fields=('name','address','zip_code','phone','web','email_address')
+    fields="__all__"
+
+
+
+13.create templates floder 
+
++---myclub
+¦   +---migrations
+¦   ¦   +---__pycache__
+¦   +---__pycache__
++---project2
+¦   +---__pycache__
++---templates
+    +---myclub
+    	|_basic.html
+	home.html
+	navbar.html
+	event_list.html
+	add_venue.html
+
+basic.html
+----------
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+<br/>
+    {% include 'myclub/navbar.html' %}
+    <br/>
+    <div class="container">
+    {%block content%}
+    {%endblock%}  
+     </div>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+  </body>
+</html>
+
+  
+home.html
+---------
+    {% extends 'myclub/basic.html' %}
+
+
+{%block content%}
+  <center>
+  <h3>Hello !!!{{name}} Event for  {{month}} {{year}}</h3><br/>
+
+  {{time}}<br/>
+
+  <br/><h3>{{ cal|safe }}</h3><br/>
+  copy right(S){{current_year}}<br/>
+  {{now}}
+  </center>
+  {%endblock%}
+
+
+
+  navbar.html
+  ----------
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{%url 'home'%}">My club</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'home' '2021' 'MARCH' %}">March</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'event_list' %}">Event</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{%url 'add-venue' %}">Add Venue</a>
+        </li>
+        
+        
+      </ul>
+      <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+
+event_list.html
+---------------
+
+     {% extends 'myclub/basic.html' %}
+
+
+{% block content %}
+  <h1> Events</h1>
+  
+{% for event in all_list %}
+<div class="card">
+  <div class="card-header">
+    {{event}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Name:{{event.name}}</h5>
+    <p class="card-text">
+      <ul>
+  
+        <li>Date:{{event.event_date}}</li>
+        <li>Manager:{{event.manager}}</li>
+        <li>Venue:{{event.venue}}</li>
+        <li>Description:{{event.description}}</li>
+        <li>Attends:</br>
+          {% for user in event.attends.all %}</li>
+          {{user}}</br>
+          {%endfor%}
+    </p>
+    
+  </div>
+</div>
+
+
+
+
+ {%endfor%}
+{%endblock%}
+</ul>
+
+
+add_venue.html
+--------------
+
+  {% extends 'myclub/basic.html' %}
+
+
+{%block content%}
+  <center>
+  <h1>Add Venue To DaataBase</h1>
+  <br/><br/>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <input type="submit" value="submit" class="btn btn-secondary">
+
+  </form>
+  </center>
+  {%endblock%}
+

@@ -1,0 +1,41 @@
+{% extends 'myclub/basic.html' %}
+
+
+{% block content %}
+  <h1> Events</h1>
+  
+{% for event in all_list %}
+<div class="card">
+  <div class="card-header">
+    {{event}}
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Name:{{event.name}}</h5>
+    <p class="card-text">
+      <ul>
+  
+        <li>Date:{{event.event_date}}</li>
+        <li>Manager:{{event.manager}}</li>
+        <li>Venue:{{event.venue}}</li>
+        <li>Description:{{event.description}}</li>
+        <li>Attends:</br>
+          {% for user in event.attends.all %}</li>
+          {{user}}</br>
+
+          {%endfor%}
+    </p>
+    </div>
+  <div class="card-footer card-text">
+  <a href="{% url 'update-event' event.id %}" class="btn btn-primary" role="button" >Update Event</a>
+  
+   </div>
+
+</div>
+</div>
+
+
+
+
+ {%endfor%}
+{%endblock%}
+</ul>

@@ -1,0 +1,37 @@
+{% extends 'testapp/basic.html' %}
+<!DOCTYPE html>
+{% load static%}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7
+/css/bootstrap.min.css" integrity="sha384-
+BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" c
+rossorigin="anonymous">
+<link rel="stylesheet" href="{% static "css/movie.css"%}">
+<link href="https://fonts.googleapis.com/css?family=Merriweather" rel="stylesh
+eet"> 
+</head>
+<body>
+
+  {%block content%}
+ 
+  <div class="container" align="center">
+    <div class="jumbotorn">
+    
+  <h1>Subbu Movie Information!!!</h1>
+  <p>Up to bate Movies updates</p>
+  <a class="btn btn-primary btn-lg"
+href="{% url 'addmovie' %}" role="button">Add Movie</a>
+<a class="btn btn-primary btn-lg"
+href="{%url 'movielist' %}" role="button">List Movies</a>
+{%endblock%}
+</div>
+  </div>
+  
+  
+</body>
+</html>
