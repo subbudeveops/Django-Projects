@@ -10,12 +10,12 @@ from .models import Venue
 
 admin.site.register(MyClubUser)
 
-class VenueAAdmin(admin.ModelAdmin):
+class VenueAdmin(admin.ModelAdmin):
   list_display=('name','address','phone')
   ordering=('name',)
   search_fields=('name','phone',)
   
-admin.site.register(Venue,VenueAAdmin)
+admin.site.register(Venue,VenueAdmin)
 
 
 class EventAdmin(admin.ModelAdmin):
