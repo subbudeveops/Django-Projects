@@ -23,12 +23,16 @@
           {{user}}</br>
 
           {%endfor%}
+        </li>
+      </ul>
     </p>
     </div>
+  
   <div class="card-footer card-text">
   <a href="{% url 'update-event' event.id %}" class="btn btn-primary" role="button" >Update Event</a>
+  <a href="{% url 'delete-event' event.id %}" class="btn btn-primary" role="button" >Delete Event</a>
   
-   </div>
+  
 
 </div>
 </div>

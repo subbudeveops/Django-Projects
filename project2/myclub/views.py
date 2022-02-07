@@ -9,6 +9,21 @@ from datetime import datetime
 from .models import Event, Venue
 from .forms import VenueForm,EventForm
 # Create your views here.
+
+def delete_venue(request,venue_id):
+  venue=Venue.obects.get(pk=venue_id)
+  venue.delete()
+  return redirect('list-venue')
+  
+  
+      
+
+def delete_event(request,event_id):
+  event=Event.objects.get(pk=event_id)
+  event.delete()
+  return redirect('event-list')
+
+
 def add_event(request):
   submitted=False
   
@@ -63,7 +78,7 @@ def show_venue(request,venue_id):
   return render(request,'myclub/showvenue.html',{'venue':venue})
 
 def venue_list(request):
-  venue_list=Venue.objects.all()
+  venue_list=Venue.objects.all().order_by('name')
   return render(request,'myclub/venuelist.html',{'venue_list':venue_list})
 
 def add_venue(request):
@@ -76,7 +91,7 @@ def add_venue(request):
   return render(request,'myclub/add_venue.html',{'form':form})
 
 def Event_list(request):
-  all_list=Event.objects.all()
+  all_list=Event.objects.all().order_by('name')
   return render(request,'myclub/event_list.html',{'all_list':all_list})
 
 def Month_Year_view(request,year=datetime.now().year,month=datetime.now().strftime('%B')):
