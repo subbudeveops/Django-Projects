@@ -153,8 +153,8 @@ def venue_list(request):
     #venue_list = Venue.objects.all().order_by('name')
     venue_list = Venue.objects.all()
     # setup pagenation for venue
-    p = Paginator(Venue.objects.all(), 1)
-    page = request.GET.get('page',)
+    p = Paginator(Venue.objects.all(), 2)
+    page = request.GET.get('page' )
     venues = p.get_page(page)
     return render(request, 'myclub/venuelist.html', {'venue_list': venue_list, 'venues': venues})
 

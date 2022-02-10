@@ -1,12 +1,12 @@
 {% extends 'myclub/basic.html' %}
 
 
-{%block content%}
+{%  block content %}
   
   <h1>Venue List</h1>
   <br/>
   <table class="table">
-  {% for venue in venue_list%}
+  {% for venue in venues %}
   <tr>
     
   <td><a href="{% url 'show-venue' venue.id %}">{{venue}} </a></td>
@@ -18,18 +18,30 @@
 
   </tr>
 
-  {%endfor%}
+  {% endfor %}
  </table>
 </br>
-
+<!--
 {{venues}}</br>
 Has previous:{{venues.has_previous}}</br>
 HAS NEXT:{{venues.has_next}}</br>
 Current Page:{{venues.number}}</br>
 Number of pages:{{venues.paginator.num_pages}}</br>
-<hr>
+<hr/>
+-->
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+
+
 {% if venues.has_previous %}
-  <a href="?page=1">&laquo First</a>
-  <a href="?page={{venues.previous_page_number}}">Previous</a>
+<li class="page-item"> <a class="page-link" href="?page=1">&laquo First</a></li>
+<li class="page-item"><a class="page-link" href="?page={{venues.previous_page_number}}">Previous</a></li>
 {% endif %}
-{%endblock%}
+<li class="page-item"><a class="page-link" href="">{{ venues.number }} of {{venues.paginator.num_pages }}</a></li>
+{% if venues.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ venues.next_page_number}}">Next</a></li>
+      <li class="page-item"><a class="page-link" href="?page={{ venues.paginator.num_pages }}">Last &raquo</a></li>
+{% endif %}
+      </ul>
+</nav>
+{% endblock %}
