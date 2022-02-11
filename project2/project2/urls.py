@@ -14,14 +14,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path, include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('myclub/', include('myclub.urls')),
+    path('members/', include('members.urls')),
+    path('members/', include('django.contrib.auth.urls')),
 ]
 # admin interface changes
-admin.site.site_header="Myclub Administrator Page"
-admin.site.site_title="Myclub page"
-admin.site.index_title=""
+admin.site.site_header = "Myclub Administrator Page"
+admin.site.site_title = "Myclub page"
+admin.site.index_title = ""
