@@ -2,6 +2,7 @@
 
 
 {% block content %}
+
   <h1> Events</h1>
   
 {% for event in all_list %}
@@ -27,19 +28,18 @@
       </ul>
     </p>
     </div>
-  
+  {% if user.is_authenticated %}
+    {% if user == event.manager %}
   <div class="card-footer card-text">
   <a href="{% url 'update-event' event.id %}" class="btn btn-primary" role="button" >Update Event</a>
   <a href="{% url 'delete-event' event.id %}" class="btn btn-primary" role="button" >Delete Event</a>
-  
-  
-
 </div>
 </div>
-
-
-
-
- {%endfor%}
+ {% endif %}
+ {% else %}
+ <h1> please sorry you must be loogin </h1>
+ <a href="{% url 'login' %}">Login Here</a1>
+  {% endif %}
+  {%endfor%}
 {%endblock%}
 </ul>

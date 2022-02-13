@@ -2,7 +2,7 @@
 
 
 {%  block content %}
-  
+  {% if user.is_authenticated %}
   <h1>Venue List</h1>
   <br/>
   <table class="table">
@@ -19,6 +19,10 @@
   </tr>
 
   {% endfor %}
+  {% else %}
+  <h1>Please Sorry Must be login in view page</h1>
+  <a href="{% url 'login' %}">Login</a>
+  {% endif %}
  </table>
 </br>
 <!--

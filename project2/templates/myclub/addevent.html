@@ -2,6 +2,7 @@
 
 
 {%block content%}
+{% if user.is_authenticated %}
   <center>
   <h1>Add Event</h1>
   <br/><br/>
@@ -17,4 +18,9 @@
       </form>
 {% endif %}
   </center>
+  {% else %}
+  <h1>Sorry Please You must be loggin in view page!!!</h1>
+  
+  <a href="{% url 'login' %}">Login Here</a>
+  {% endif %}
   {%endblock%}
