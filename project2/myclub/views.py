@@ -7,7 +7,7 @@ import calendar
 from calendar import Calendar, HTMLCalendar, month, monthcalendar
 from datetime import datetime
 from .models import Event, Venue
-from .forms import VenueForm, EventForm
+from .forms import VenueForm, EventForm, EventFormAdmin
 from django.http import HttpResponse
 # import pdf attributes
 import csv
@@ -99,14 +99,25 @@ def add_event(request):
     submitted = False
 
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('./add_event?submitted=True')
+        if request.user.is_superuser:
+            form = EventFormAdmin(request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('./add_event?submitted=True')
+        else:
+    
+            form = EventFormAdmin(request.POST)
+            if form.is_valid():
+                event=form.save(commit=False)
+                event.manage=request.user
+                event.save()
     else:
-        form = EventForm
+        if request.user.is_superuser:
+             form=EventFormAdmin
+        else:
+            form=EventForm()  
+             
         if 'submitted' in request.GET:
-
             submitted = True
     return render(request, 'myclub/addevent.html', {'form': form, 'submitted': submitted})
 

@@ -56,7 +56,8 @@
         </li>
         {% endif %}
        
-       
+       <ul class= "nav navbar-nav navbar-right">
+         <p style="color:white"> Logged In :{{user.username}}</p>
         
       </ul>
       <form class="d-flex" method="POST" action="{% url 'search-venue' %}">
@@ -64,6 +65,7 @@
         <input class="form-control me-2" type="search" placeholder="Search Venue" aria-label="Search" name="searchvenue">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
+      {{user.id}}
     </div>
   </div>
 </nav>
