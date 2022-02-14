@@ -154,7 +154,7 @@ def venue_list(request):
     venue_list = Venue.objects.all()
     # setup pagenation for venue
     p = Paginator(Venue.objects.all(), 2)
-    page = request.GET.get('page' )
+    page = request.GET.get('page')
     venues = p.get_page(page)
     return render(request, 'myclub/venuelist.html', {'venue_list': venue_list, 'venues': venues})
 
@@ -164,7 +164,10 @@ def add_venue(request):
     if request.method == "POST":
         form = VenueForm(request.POST)
         if form.is_valid():
-            form.save()
+            venue = form.save(commit=False)
+            venue.owner = request.user.id
+            venue.save()
+            # form.save()
         return Month_Year_view(request)
     return render(request, 'myclub/add_venue.html', {'form': form})
 
