@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="{%url 'home'%}">My club</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,6 +47,11 @@
         {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{%url 'logout' %}">Logout</a>
+        
+          </li>
+
+          Loged In:{{user.username}}
+          
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{%url 'register' %}">Register</a>
@@ -55,12 +60,10 @@
           <a class="nav-link" href="{%url 'login' %}">Login</a>
         </li>
         {% endif %}
-       
-       
-        
-      </ul>
-      <form class="d-flex" method="POST" action="{% url 'search-venue' %}">
+      
+      <form class="d-flex" method="POST"  action="{% url 'search-venue' %}">
         {% csrf_token %}
+      
         <input class="form-control me-2" type="search" placeholder="Search Venue" aria-label="Search" name="searchvenue">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>

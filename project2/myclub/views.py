@@ -7,8 +7,11 @@ import calendar
 from calendar import Calendar, HTMLCalendar, month, monthcalendar
 from datetime import datetime
 from .models import Event, Venue
-from .forms import VenueForm, EventForm
+from .forms import VenueForm, EventForm, EventFormAdmin
 from django.http import HttpResponse
+from django.contrib import messages
+
+from django.contrib.auth.models import User
 # import pdf attributes
 import csv
 import reportlab
@@ -84,29 +87,46 @@ def venue_text(request):
 
 
 def delete_venue(request, venue_id):
-    venue = Venue.obects.get(pk=venue_id)
+    venue = Venue.objects.get(pk=venue_id)
     venue.delete()
     return redirect('list-venue')
 
 
 def delete_event(request, event_id):
     event = Event.objects.get(pk=event_id)
-    event.delete()
-    return redirect('event-list')
+    if request.user == event.manager:
+        event.delete()
+        messages.success(request, ("Event Deleted!!!!"))
+        return redirect('event-list')
+    else:
+        messages.success(
+            request, ("Your are not authoeized to Delete this Event"))
+        return redirect('event-list')
 
 
 def add_event(request):
     submitted = False
 
     if request.method == "POST":
-        form = EventForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('./add_event?submitted=True')
-    else:
-        form = EventForm
-        if 'submitted' in request.GET:
+        if request.user.is_superuser:
+            form = EventFormAdmin(request.POST)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('./add_event?submitted=True')
+        else:
 
+            form = EventFormAdmin(request.POST)
+            if form.is_valid():
+                event = form.save(commit=False)
+                event.manage = request.user
+                event.save()
+    else:
+        if request.user.is_superuser:
+            form = EventFormAdmin
+        else:
+            form = EventForm()
+
+        if 'submitted' in request.GET:
             submitted = True
     return render(request, 'myclub/addevent.html', {'form': form, 'submitted': submitted})
 
@@ -146,7 +166,9 @@ def search_venue(request):
 
 def show_venue(request, venue_id):
     venue = Venue.objects.get(pk=venue_id)
-    return render(request, 'myclub/showvenue.html', {'venue': venue})
+    # this logic is VenuEe Owner name and email getting details
+    venue_owner = User.objects.get(pk=venue.owner)
+    return render(request, 'myclub/showvenue.html', {'venue': venue, 'venue_owner': venue_owner})
 
 
 def venue_list(request):

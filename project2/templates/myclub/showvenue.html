@@ -2,24 +2,25 @@
 
 
 {%block content%}
-<h1>{{venue}}</h1>
+
 <div class="card">
   <div class="card-header">
-    {{event}}
+    Venue
   </div>
   <div class="card-body">
-    <h5 class="card-title">{{venue}}</h5>
+    <h5 class="card-title">{{venue.name}}</h5>
     <p class="card-text">
-  <br>
+  <li>{{venue.address}}</li>
+  <li>{{venue.zip_code}}</li>
+  <li>{{venue.phone}}</li>
+  <li>{{venue.email_address}}</li>
+  <li><a href="{{venue.web}}">{{venue.web}}</a></li>
   
-  
-  {{venue.name}}<br/>
-  {{venue.address}}</br>
-  {{venue.zip_code}}</br>
-  {{venue.phone}}</br>
-  {{venue.email}}</br>
-  <a href="{{venue.web}}">{{venue.web}}</a></br>
-</p>
+  <!-- Venue owner name and Email  is showing this is the logic-->
+
+  <li> Venue Owner Name: {{ venue_owner }}</li>
+  <li> Venue Owner Email: {{ venue_owner.email }}</li>
+    </p>
 </div>
 </div>
   </center>
