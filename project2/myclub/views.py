@@ -167,7 +167,7 @@ def search_venue(request):
 def show_venue(request, venue_id):
     venue = Venue.objects.get(pk=venue_id)
     # this logic is VenuEe Owner name and email getting details
-    venue_owner = User.objects.get(pk=venue.owner)
+    venue_owner = User.objects.get(pk=venue.owner)sh
     return render(request, 'myclub/showvenue.html', {'venue': venue, 'venue_owner': venue_owner})
 
 
