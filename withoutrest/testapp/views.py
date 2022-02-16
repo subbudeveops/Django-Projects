@@ -1,3 +1,4 @@
+from testapp.mixins import myMixins
 from django.views.generic import View
 from django.http import JsonResponse
 import json
@@ -52,19 +53,19 @@ class JsonCBV(View):
         return JsonResponse(emp_data)
 
 
-class JsonCBV(View):
+class JsonCBV(myMixins, View):
     def get(self, request, *args, **kwargs):
-        json_data = json.dumps({'msg': 'This is get Method'})
-        return HttpResponse(json_data, content_type='application/json')
+        json_data = json.dumps({'msg': 'This is  get Method'})
+        return self.myfunction(json_data)
 
     def post(self, request, *args, **kwargs):
         json_data = json.dumps({'msg': 'This is post Method'})
-        return HttpResponse(json_data, content_type='application/json')
+        return self.myfunction(json_data)
 
     def put(self, request, *args, **kwargs):
         json_data = json.dumps({'msg': 'This is put Method'})
-        return HttpResponse(json_data, content_type='application/json')
+        return self.myfunction(json_data)
 
     def delete(self, request, *args, **kwargs):
         json_data = json.dumps({'msg': 'This is delete Method'})
-        return HttpResponse(json_data, content_type='application/json')
+        return self.myfunction(json_data)
